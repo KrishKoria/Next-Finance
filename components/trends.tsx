@@ -2,7 +2,7 @@ import { useFormatCurrency } from "@/hooks/formatCurrency";
 import { ArrowDownLeft, ArrowUpRight } from "lucide-react";
 import { useMemo } from "react";
 
-type ColorType = "Revenue" | "Expense" | "Profit" | "Loss";
+type ColorType = "Income" | "Expense" | "Savings" | "Investment";
 
 export default function Trends({
   type,
@@ -14,10 +14,10 @@ export default function Trends({
   prevAmount: number;
 }) {
   const colorClasses = {
-    Revenue: "text-green-700 dark:text-green-300",
+    Income: "text-green-700 dark:text-green-300",
     Expense: "text-red-700 dark:text-red-300",
-    Profit: "text-green-700 dark:text-green-300",
-    Loss: "text-red-700 dark:text-red-300",
+    Savings: "text-green-700 dark:text-green-300",
+    Investment: "text-red-700 dark:text-red-300",
   };
   const calcPercentage = (amount: number, prevAmount: number) => {
     if (!amount || !prevAmount) return 0;
