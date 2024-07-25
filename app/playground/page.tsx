@@ -1,12 +1,12 @@
 import PageHeader from "@/components/PageHeader";
 import TransactionItem from "@/components/TransactionItem";
+import TransactionSummary from "@/components/TransactionSummary";
 import Trends from "@/components/trends";
 
 export default function PlaygroundPage() {
   return (
     <main className="space-y-8">
       <h1 className="text-4xl mt-8">hello from playground!</h1>
-
       <div>
         <h2 className="mb-4 text-lg font-mono">Page Header</h2>
         <hr className="mb-4 border-gray-200 dark:border-gray-800" />
@@ -37,6 +37,29 @@ export default function PlaygroundPage() {
           />
           <TransactionItem type="Savings" desc="Family" amount={2000} />
           <TransactionItem type="Investment" desc="Stock" amount={9000} />
+        </div>
+      </div>
+      <div>
+        <h2 className="mb-4 text-lg font-mono">
+          TransactionSummaryItem + TransactionItem
+        </h2>
+        <hr className="mb-4 border-gray-200 dark:border-gray-800" />
+        <div className="space-y-4">
+          <TransactionSummary date="2024-05-01" amount={3500} />
+          <hr className="mb-4 border-gray-200 dark:border-gray-800" />
+          <TransactionItem type="Income" desc="Salary" amount={2000} />
+          <TransactionItem
+            type="Expense"
+            category="Food"
+            desc="Going out to eat"
+            amount={29}
+          />
+          <TransactionItem type="Savings" desc="For children" amount={500} />
+          <TransactionItem
+            type="Investment"
+            desc="In Microsoft"
+            amount={9000}
+          />
         </div>
       </div>
     </main>
