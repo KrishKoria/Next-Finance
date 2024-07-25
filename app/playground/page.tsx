@@ -20,7 +20,7 @@ export default function PlaygroundPage() {
           <Trends type="Revenue" amount={1000} prevAmount={500} />
           <Trends type="Expense" amount={1000} prevAmount={500} />
           <Trends type="Profit" amount={1000} prevAmount={500} />
-          <Trends type="Loss" amount={1000} prevAmount={500} />
+          <Trends type="Loss" amount={500} prevAmount={750} />
         </div>
       </div>
     </main>

@@ -1,3 +1,4 @@
+import { useFormatCurrency } from "@/hooks/formatCurrency";
 import { ArrowDownLeft, ArrowUpRight } from "lucide-react";
 import { useMemo } from "react";
 
@@ -22,24 +23,19 @@ export default function Trends({
     if (!amount || !prevAmount) return 0;
     return ((amount - prevAmount) / prevAmount) * 100;
   };
-
   const percentageChange = parseFloat(
     useMemo(
       () => calcPercentage(amount, prevAmount).toFixed(0),
       [amount, prevAmount]
     )
   );
-  const formatCurrecy = (amount: number) => {
-    return new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
-    }).format(amount);
-  };
+
+  const formattedAmount = useFormatCurrency(amount);
   return (
     <div className="">
       <div className={`font-semibold ${colorClasses[type]}`}>{type}</div>
       <div className="text-2xl font-semibold text-black dark:text-white mb-2">
-        {amount ? formatCurrecy(amount) : formatCurrecy(0)}
+        {formattedAmount}
       </div>
       <div className="flex space-x-1 items-center text-sm">
         {percentageChange <= 0 && (
