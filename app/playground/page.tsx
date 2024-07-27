@@ -10,7 +10,7 @@ export default function PlaygroundPage() {
       <div>
         <h2 className="mb-4 text-lg font-mono">Page Header</h2>
         <hr className="mb-4 border-gray-200 dark:border-gray-800" />
-        <div className="">
+        <div>
           <PageHeader />
         </div>
       </div>
