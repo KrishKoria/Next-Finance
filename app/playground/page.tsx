@@ -1,7 +1,13 @@
+import { ModeToggle } from "@/components/ModeToggle";
 import PageHeader from "@/components/PageHeader";
+import { SelectBox } from "@/components/Select";
 import TransactionItem from "@/components/TransactionItem";
 import TransactionSummary from "@/components/TransactionSummary";
 import Trends from "@/components/trends";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function PlaygroundPage() {
   return (
@@ -10,7 +16,7 @@ export default function PlaygroundPage() {
       <div>
         <h2 className="mb-4 text-lg font-mono">Page Header</h2>
         <hr className="mb-4 border-gray-200 dark:border-gray-800" />
-        <div>
+        <div className="flex items-center justify-between">
           <PageHeader />
         </div>
       </div>
@@ -60,6 +66,40 @@ export default function PlaygroundPage() {
             desc="In Microsoft"
             amount={9000}
           />
+        </div>
+      </div>
+      <div>
+        <h2 className="mb-4 text-lg font-mono">Buttons</h2>
+        <hr className="mb-4 border-gray-200 dark:border-gray-800" />
+        <div className="space-x-4">
+          <Button>Hello</Button>
+          <Button variant="outline">Hello</Button>
+          <Button variant="ghost">Hello</Button>
+          <Button size="sm">Hello</Button>
+          <Button size="lg">Hello</Button>
+        </div>
+      </div>
+
+      <div>
+        <h2 className="mb-4 text-lg font-mono">Forms</h2>
+        <hr className="mb-4 border-gray-200 dark:border-gray-800" />
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <Label className="mb-1">Your name</Label>
+            <Input type="text" placeholder="Type something in here..." />
+          </div>
+
+          <div>
+            <Label className="mb-1">Location</Label>
+            <SelectBox />
+          </div>
+
+          <div className="flex items-center">
+            <Checkbox id="terms" />
+            <Label className="ml-2" htmlFor="terms">
+              Accept terms
+            </Label>
+          </div>
         </div>
       </div>
     </main>

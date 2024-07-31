@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { ModeToggle } from "./ModeToggle";
 
 export default function PageHeader({ className }: { className?: string }) {
   return (
@@ -10,10 +9,7 @@ export default function PageHeader({ className }: { className?: string }) {
       >
         Next Finance
       </Link>
-      <div className="flex items-center">
-        <ModeToggle />
-        <div>User Dropdown</div>
-      </div>
+      <div>User Dropdown</div>
     </header>
   );
 }
