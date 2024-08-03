@@ -3,12 +3,12 @@ import { HandCoins, Landmark, PiggyBank, Wallet } from "lucide-react";
 type TransactionType = "Income" | "Expense" | "Savings" | "Investment";
 export default function TransactionItem({
   type,
-  desc,
+  description,
   amount,
   category,
 }: {
   type: TransactionType;
-  desc: string;
+  description: string;
   amount: number;
   category?: string;
 }) {
@@ -38,7 +38,7 @@ export default function TransactionItem({
     <div className="w-full flex items-center">
       <div className="flex items-center mr-4 grow">
         <IconComponent className={`mr-2 w-4 h-4 hidden sm:block ${colors}`} />
-        <span>{desc}</span>
+        <span>{description}</span>
       </div>
       <div className="min-w-[150px] items-center hidden md:flex">
         {category && (

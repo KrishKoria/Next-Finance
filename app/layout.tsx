@@ -18,18 +18,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={`${inter.className} min-h-screen flex flex-col`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          <div className="relative">
-            <div className="absolute top-0 right-6 z-50 ">
-              <ModeToggle />
-            </div>
-          </div>
           {children}
         </ThemeProvider>
       </body>

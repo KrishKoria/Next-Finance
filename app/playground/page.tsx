@@ -16,7 +16,7 @@ export default function PlaygroundPage() {
       <div>
         <h2 className="mb-4 text-lg font-mono">Page Header</h2>
         <hr className="mb-4 border-gray-200 dark:border-gray-800" />
-        <div className="flex items-center justify-between">
+        <div>
           <PageHeader />
         </div>
       </div>
