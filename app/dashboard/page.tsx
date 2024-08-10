@@ -1,11 +1,11 @@
-import TransactionListFallback from "@/components/TransactionFallback";
 import TransactionList from "@/components/TransactionList";
+import TransactionListFallback from "@/components/TransactionListFallback";
 import { Suspense } from "react";
 
 export default function DashboardPage() {
   return (
     <>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<TransactionListFallback />}>
         <TransactionList />
       </Suspense>
     </>
