@@ -1,29 +1,11 @@
-import * as React from "react";
+import { forwardRef, Ref } from "react";
 
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-export function SelectBox() {
+export default forwardRef(function Select(props, ref: Ref<HTMLSelectElement>) {
   return (
-    <Select>
-      <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="Select Location" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectGroup>
-          <SelectLabel>Location</SelectLabel>
-          <SelectItem value="Warsaw">Warsaw</SelectItem>
-          <SelectItem value="Berlin">Berlin</SelectItem>
-          <SelectItem value="London">London</SelectItem>
-        </SelectGroup>
-      </SelectContent>
-    </Select>
+    <select
+      ref={ref}
+      {...props}
+      className="w-full rounded-md border-gray-300 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-950"
+    ></select>
   );
-}
+});
