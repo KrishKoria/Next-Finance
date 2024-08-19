@@ -5,6 +5,8 @@ import { Label } from "./ui/label";
 import { Button } from "./ui/button";
 import Select from "./Select";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { addTransactionSchema, AddTransactionSchema } from "@/lib/validations";
 
 type Inputs = {
   type: string;
@@ -20,7 +22,8 @@ export default function AddTransactionForm() {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<Inputs>({
+  } = useForm<AddTransactionSchema>({
+    resolver: zodResolver(addTransactionSchema),
     mode: "onTouched",
   });
 
@@ -32,11 +35,7 @@ export default function AddTransactionForm() {
           <Label className="mb-1 block text-gray-700 dark:text-gray-300">
             Type
           </Label>
-          <Select
-            {...register("type", {
-              required: "Please select the type of transaction",
-            })}
-          >
+          <Select {...register("type")}>
             {types.map((category) => (
               <option key={category}>{category}</option>
             ))}
@@ -50,9 +49,7 @@ export default function AddTransactionForm() {
           <Label className="mb-1 block text-gray-700 dark:text-gray-300">
             Category
           </Label>
-          <Select
-            {...register("category", { required: "Please choose a category" })}
-          >
+          <Select {...register("category")}>
             {categories.map((category) => (
               <option key={category}>{category}</option>
             ))}
@@ -66,9 +63,7 @@ export default function AddTransactionForm() {
           <Label className="mb-1 block text-gray-700 dark:text-gray-300">
             Date
           </Label>
-          <Input
-            {...register("created_at", { required: "Please Enter a Date" })}
-          />
+          <Input {...register("created_at")} />
           {errors.created_at && (
             <p className="mt-1 text-red-600">{errors.created_at.message}</p>
           )}
@@ -80,11 +75,8 @@ export default function AddTransactionForm() {
           </Label>
           <Input
             type="number"
-            {...register("amount", {
-              required: "Please Enter an Amount",
-              min: { value: 1, message: "Amount must be greater than 0" },
-              valueAsNumber: true,
-            })}
+            defaultValue={0}
+            {...register("amount", { valueAsNumber: true })}
           />
           {errors.amount && (
             <p className="mt-1 text-red-600">{errors.amount.message}</p>
@@ -95,11 +87,7 @@ export default function AddTransactionForm() {
           <Label className="mb-1 block text-gray-700 dark:text-gray-300">
             Description
           </Label>
-          <Input
-            {...register("description", {
-              required: "Please enter a description",
-            })}
-          />
+          <Input {...register("description")} />
           {errors.description && (
             <p className="mt-1 text-red-600">{errors.description.message}</p>
           )}
