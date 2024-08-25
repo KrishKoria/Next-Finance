@@ -3,11 +3,15 @@ import TransactionListFallback from "@/components/TransactionListFallback";
 import Trend from "@/components/Trend";
 import TrendFallback from "@/components/TrendFallback";
 import { Button } from "@/components/ui/button";
+import { createClient } from "@/utils/supabase/server";
 import { PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const client = createClient();
+
+  console.log(await client.from("transactions").select());
   return (
     <>
       <section className="mb-8">
