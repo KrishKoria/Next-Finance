@@ -29,7 +29,14 @@ const groupAndSumTransactionsByDate = (transactions: Transaction[]) => {
 };
 
 export default async function TransactionList() {
-  const response = await fetch("http://localhost:3100/transactions");
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/transactions`,
+    {
+      next: {
+        tags: ["transaction-list"],
+      },
+    },
+  );
 
   const transactions: Transaction[] = await response.json();
   const grouped = groupAndSumTransactionsByDate(transactions);

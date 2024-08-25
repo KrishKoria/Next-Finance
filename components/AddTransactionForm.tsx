@@ -7,14 +7,11 @@ import Select from "./Select";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addTransactionSchema, AddTransactionSchema } from "@/lib/validations";
-
-type Inputs = {
-  type: string;
-  category: string;
-  created_at: string;
-  amount: number;
-  description: string;
-};
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { purgeTransactionListCache } from "@/lib/actions";
+import FormError from "./Error";
 
 export default function AddTransactionForm() {
   const {
@@ -26,8 +23,29 @@ export default function AddTransactionForm() {
     resolver: zodResolver(addTransactionSchema),
     mode: "onTouched",
   });
-
-  const onSubmit = (data: any) => console.log(data);
+  const [saving, setSaving] = useState(false);
+  const router = useRouter();
+  const onSubmit = async (data: any) => {
+    setSaving(true);
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/transactions`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...data,
+          created_at: `${data.created_at}T00:00:00`,
+        }),
+      });
+      await purgeTransactionListCache();
+      router.push("/dashboard");
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setSaving(false);
+    }
+  };
   return (
     <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -40,9 +58,7 @@ export default function AddTransactionForm() {
               <option key={category}>{category}</option>
             ))}
           </Select>
-          {errors.type && (
-            <p className="mt-1 text-red-600">{errors.type.message}</p>
-          )}
+          <FormError error={errors.type} />
         </div>
 
         <div>
@@ -54,9 +70,7 @@ export default function AddTransactionForm() {
               <option key={category}>{category}</option>
             ))}
           </Select>
-          {errors.category && (
-            <p className="mt-1 text-red-600">{errors.category.message}</p>
-          )}
+          <FormError error={errors.category} />
         </div>
 
         <div>
@@ -64,9 +78,7 @@ export default function AddTransactionForm() {
             Date
           </Label>
           <Input {...register("created_at")} />
-          {errors.created_at && (
-            <p className="mt-1 text-red-600">{errors.created_at.message}</p>
-          )}
+          <FormError error={errors.created_at} />
         </div>
 
         <div>
@@ -78,9 +90,7 @@ export default function AddTransactionForm() {
             defaultValue={0}
             {...register("amount", { valueAsNumber: true })}
           />
-          {errors.amount && (
-            <p className="mt-1 text-red-600">{errors.amount.message}</p>
-          )}
+          <FormError error={errors.amount} />
         </div>
 
         <div className="col-span-1 md:col-span-2">
@@ -88,14 +98,15 @@ export default function AddTransactionForm() {
             Description
           </Label>
           <Input {...register("description")} />
-          {errors.description && (
-            <p className="mt-1 text-red-600">{errors.description.message}</p>
-          )}
+          <FormError error={errors.description} />
         </div>
       </div>
 
       <div className="flex justify-end">
-        <Button type="submit">Save</Button>
+        <Button type="submit" disabled={saving}>
+          {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          Save
+        </Button>
       </div>
     </form>
   );

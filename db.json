@@ -31,6 +31,30 @@
       "description": "Rent",
       "category": "Housing",
       "created_at": "2024-05-10T23:00:00"
+    },
+    {
+      "type": "Income",
+      "category": "Housing",
+      "amount": 5,
+      "description": "banana",
+      "created_at": "2024-01-10T00:00:00",
+      "id": 5
+    },
+    {
+      "type": "Income",
+      "category": "Housing",
+      "amount": 5,
+      "description": "mango",
+      "created_at": "2024-01-10T00:00:00",
+      "id": 6
+    },
+    {
+      "type": "Income",
+      "category": "Housing",
+      "amount": 899,
+      "description": "orange",
+      "created_at": "2024-10-01T00:00:00",
+      "id": 7
     }
   ],
   "trends": [
