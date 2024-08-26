@@ -10,8 +10,8 @@ import { addTransactionSchema, AddTransactionSchema } from "@/lib/validations";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { purgeTransactionListCache } from "@/lib/actions";
 import FormError from "./Error";
+import { createTransaction } from "@/lib/actions";
 
 export default function AddTransactionForm() {
   const {
@@ -24,24 +24,20 @@ export default function AddTransactionForm() {
     mode: "onTouched",
   });
   const [saving, setSaving] = useState(false);
+  const [lastError, setLastError] = useState("");
   const router = useRouter();
   const onSubmit = async (data: any) => {
     setSaving(true);
+    setLastError("");
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/transactions`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...data,
-          created_at: `${data.created_at}T00:00:00`,
-        }),
-      });
-      await purgeTransactionListCache();
-      router.push("/dashboard");
+      await createTransaction(data);
+      // router.push("/dashboard");
     } catch (error) {
-      console.error(error);
+      if (error instanceof Error) {
+        setLastError(error.message);
+      } else {
+        setLastError("An unknown error occurred");
+      }
     } finally {
       setSaving(false);
     }
@@ -102,7 +98,8 @@ export default function AddTransactionForm() {
         </div>
       </div>
 
-      <div className="flex justify-end">
+      <div className="flex items-center justify-between">
+        <div>{lastError && <FormError error={lastError} />}</div>
         <Button type="submit" disabled={saving}>
           {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Save
