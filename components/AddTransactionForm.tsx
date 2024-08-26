@@ -9,7 +9,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { addTransactionSchema, AddTransactionSchema } from "@/lib/validations";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
 import FormError from "./Error";
 import { createTransaction } from "@/lib/actions";
 
@@ -24,19 +23,15 @@ export default function AddTransactionForm() {
     mode: "onTouched",
   });
   const [saving, setSaving] = useState(false);
-  const [lastError, setLastError] = useState("");
-  const router = useRouter();
+  const [lastError, setLastError] = useState<Error | undefined>();
   const onSubmit = async (data: any) => {
     setSaving(true);
-    setLastError("");
+    setLastError(undefined);
     try {
       await createTransaction(data);
-      // router.push("/dashboard");
     } catch (error) {
       if (error instanceof Error) {
-        setLastError(error.message);
-      } else {
-        setLastError("An unknown error occurred");
+        setLastError(error);
       }
     } finally {
       setSaving(false);

@@ -3,11 +3,11 @@ import TransactionListFallback from "@/components/TransactionListFallback";
 import Trend from "@/components/Trend";
 import TrendFallback from "@/components/TrendFallback";
 import { Button } from "@/components/ui/button";
-import { createClient } from "@/utils/supabase/server";
+import { types } from "@/lib/consts";
 import { PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
-
+import { ErrorBoundary } from "react-error-boundary";
 export default async function DashboardPage() {
   return (
     <>
@@ -15,18 +15,18 @@ export default async function DashboardPage() {
         <h1 className="text-4xl font-semibold">Summary</h1>
       </section>
       <section className="mb-8 grid grid-cols-2 gap-8 lg:grid-cols-4">
-        <Suspense fallback={<TrendFallback />}>
-          <Trend type="Income" />
-        </Suspense>
-        <Suspense fallback={<TrendFallback />}>
-          <Trend type="Expense" />
-        </Suspense>
-        <Suspense fallback={<TrendFallback />}>
-          <Trend type="Savings" />
-        </Suspense>
-        <Suspense fallback={<TrendFallback />}>
-          <Trend type="Investment" />
-        </Suspense>
+        {types.map((type) => (
+          <ErrorBoundary
+            key={type}
+            fallback={
+              <div className="text-red-500">Cannot fetch {type} trend data</div>
+            }
+          >
+            <Suspense fallback={<TrendFallback />}>
+              <Trend type={type} />
+            </Suspense>
+          </ErrorBoundary>
+        ))}
       </section>
       <section className="mb-8 flex items-center justify-between">
         <h2 className="text-2xl">Transactions</h2>
