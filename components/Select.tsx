@@ -1,11 +1,19 @@
-import { forwardRef, Ref } from "react";
+import React, { forwardRef, Ref, SelectHTMLAttributes } from "react";
 
-export default forwardRef(function Select(props, ref: Ref<HTMLSelectElement>) {
-  return (
-    <select
-      ref={ref}
-      {...props}
-      className="w-full rounded-md border-gray-300 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-950"
-    ></select>
-  );
-});
+interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
+  ref?: Ref<HTMLSelectElement>;
+}
+
+const Select = forwardRef<HTMLSelectElement, SelectProps>(
+  function Select(props, ref) {
+    return (
+      <select
+        ref={ref}
+        {...props}
+        className="w-full rounded-md border-gray-300 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-950"
+      ></select>
+    );
+  },
+);
+
+export default Select;

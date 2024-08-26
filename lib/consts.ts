@@ -6,4 +6,5 @@ export const categories = [
   "Food",
   "Education",
   "Other",
+  "None",
 ] as const;

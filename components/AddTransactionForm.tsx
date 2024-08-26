@@ -17,12 +17,14 @@ export default function AddTransactionForm() {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<AddTransactionSchema>({
     resolver: zodResolver(addTransactionSchema),
     mode: "onTouched",
   });
   const [saving, setSaving] = useState(false);
+  const type = watch("type");
   const [lastError, setLastError] = useState<Error | undefined>();
   const onSubmit = async (data: any) => {
     setSaving(true);
@@ -44,9 +46,17 @@ export default function AddTransactionForm() {
           <Label className="mb-1 block text-gray-700 dark:text-gray-300">
             Type
           </Label>
-          <Select {...register("type")}>
-            {types.map((category) => (
-              <option key={category}>{category}</option>
+          <Select
+            {...register("type", {
+              onChange: (e: React.ChangeEvent<HTMLSelectElement>) => {
+                if (e.target.value !== "Expense") {
+                  setValue("category", "None");
+                }
+              },
+            })}
+          >
+            {types.map((type) => (
+              <option key={type}>{type}</option>
             ))}
           </Select>
           <FormError error={errors.type} />
@@ -56,7 +66,8 @@ export default function AddTransactionForm() {
           <Label className="mb-1 block text-gray-700 dark:text-gray-300">
             Category
           </Label>
-          <Select {...register("category")}>
+          <Select {...register("category")} disabled={type !== "Expense"}>
+            <option value="">Select a category</option>
             {categories.map((category) => (
               <option key={category}>{category}</option>
             ))}
