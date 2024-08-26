@@ -1,3 +1,4 @@
+import { createClient } from "@/utils/supabase/server";
 import Separator from "./seperator";
 import TransactionItem from "./TransactionItem";
 import TransactionSummary from "./TransactionSummary";
@@ -29,17 +30,12 @@ const groupAndSumTransactionsByDate = (transactions: Transaction[]) => {
 };
 
 export default async function TransactionList() {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/transactions`,
-    {
-      next: {
-        tags: ["transaction-list"],
-      },
-    },
-  );
-
-  const transactions: Transaction[] = await response.json();
-  const grouped = groupAndSumTransactionsByDate(transactions);
+  const supabase = createClient();
+  const { data: transactions, error } = await supabase
+    .from("transactions")
+    .select("*")
+    .order("created_at", { ascending: false });
+  const grouped = groupAndSumTransactionsByDate(transactions!);
   return (
     <div className="space-y-8">
       {Object.entries(grouped).map(([date, { transactions, amount }]) => (

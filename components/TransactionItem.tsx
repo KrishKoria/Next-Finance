@@ -31,24 +31,23 @@ export default function TransactionItem({
       color: "text-yellow-500 dark:text-yellow-400",
     },
   };
-
   const IconComponent = iconMap[type].icon;
   const colors = iconMap[type].color;
   return (
-    <div className="w-full flex items-center">
-      <div className="flex items-center mr-4 grow">
-        <IconComponent className={`mr-2 w-4 h-4 hidden sm:block ${colors}`} />
+    <div className="flex w-full items-center">
+      <div className="mr-4 flex grow items-center">
+        <IconComponent className={`mr-2 hidden h-4 w-4 sm:block ${colors}`} />
         <span>{description}</span>
       </div>
-      <div className="min-w-[150px] items-center hidden md:flex">
+      <div className="hidden min-w-[150px] items-center md:flex">
         {category && (
-          <div className="rounded-md text-xs bg-gray-700 dark:bg-gray-100 text-gray-100 dark:text-black py-0.5 px-2">
+          <div className="rounded-md bg-gray-700 px-2 py-0.5 text-xs text-gray-100 dark:bg-gray-100 dark:text-black">
             {category}
           </div>
         )}
       </div>
       <div className="min-w-[70px] text-right">{formatCurrency}</div>
-      <div className="min-w-[50px] flex justify-end">...</div>
+      <div className="flex min-w-[50px] justify-end">...</div>
     </div>
   );
 }

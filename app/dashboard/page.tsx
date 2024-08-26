@@ -9,9 +9,6 @@ import Link from "next/link";
 import { Suspense } from "react";
 
 export default async function DashboardPage() {
-  const client = createClient();
-
-  console.log(await client.from("transactions").select());
   return (
     <>
       <section className="mb-8">
