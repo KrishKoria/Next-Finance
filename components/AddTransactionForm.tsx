@@ -27,7 +27,6 @@ export default function AddTransactionForm() {
   const type = watch("type");
   const [lastError, setLastError] = useState<Error | undefined>();
   const onSubmit = async (data: any) => {
-    console.log(data);
     setSaving(true);
     setLastError(undefined);
     try {

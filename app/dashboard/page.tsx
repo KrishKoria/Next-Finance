@@ -1,4 +1,4 @@
-import Range from "@/components/range";
+import Range from "@/components/Range";
 import TransactionList from "@/components/TransactionList";
 import TransactionListFallback from "@/components/TransactionListFallback";
 import Trend from "@/components/Trend";
@@ -9,7 +9,12 @@ import { PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: any;
+}) {
+  const range = searchParams?.range ?? "last30days";
   return (
     <>
       <section className="mb-8 flex items-center justify-between">
@@ -27,7 +32,7 @@ export default async function DashboardPage() {
             }
           >
             <Suspense fallback={<TrendFallback />}>
-              <Trend type={type} />
+              <Trend type={type} range={range} />
             </Suspense>
           </ErrorBoundary>
         ))}
