@@ -1,18 +1,44 @@
-import { createClient } from "@/utils/supabase/server";
+"use client";
+import { useState } from "react";
 import Separator from "./seperator";
 import TransactionItem from "./TransactionItem";
 import TransactionSummary from "./TransactionSummary";
 import { groupAndSumTransactionsByDate } from "@/lib/utils";
+import { fetchTransactions } from "@/lib/actions";
+import { Button } from "./ui/button";
+import { Loader } from "lucide-react";
 
-export default async function TransactionList({ range }: { range: string }) {
-  const supabase = createClient();
-  let { data: transactions, error } = await supabase.rpc("fetch_transactions", {
-    // limit_arg,
-    // offset_arg,
-    range_arg: range,
-  });
-  if (error) throw new Error("We can't fetch transactions");
-  const grouped = groupAndSumTransactionsByDate(transactions!);
+export default function TransactionList({
+  initialTransactions,
+  range,
+}: {
+  initialTransactions: any;
+  range: string;
+}) {
+  const [transactions, setTransactions] = useState(initialTransactions);
+  const [offset, setOffset] = useState(initialTransactions.length + 1);
+  const [buttonHidden, setButtonHidden] = useState(
+    initialTransactions.length === 0,
+  );
+  const [loading, setLoading] = useState(false);
+  const grouped = groupAndSumTransactionsByDate(transactions);
+
+  const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log(transactions);
+    setLoading(true);
+    let nextTransactions: any[] = [];
+    try {
+      nextTransactions = await fetchTransactions(range, offset, 10);
+      setButtonHidden(nextTransactions.length === 0);
+      setOffset((prevValue: number) => prevValue + 10);
+      setTransactions((prevTransactions: any[]) => [
+        ...prevTransactions,
+        ...nextTransactions,
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="space-y-8">
       {Object.entries(grouped).map(([date, { transactions, amount }]) => (
@@ -28,6 +54,21 @@ export default async function TransactionList({ range }: { range: string }) {
           </section>
         </div>
       ))}
+      {transactions.length === 0 && (
+        <div className="text-center text-gray-400 dark:text-white">
+          No transactions found
+        </div>
+      )}
+      {!buttonHidden && (
+        <div className="flex justify-center">
+          <Button variant="ghost" onClick={handleClick} disabled={loading}>
+            <div className="flex items-center space-x-1">
+              {loading && <Loader className="animate-spin" />}
+              <div>Load More</div>
+            </div>
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
