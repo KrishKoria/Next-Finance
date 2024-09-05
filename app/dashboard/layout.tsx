@@ -7,9 +7,9 @@ export default function DashboardLayout({
 }>) {
   return (
     <>
-      <PageHeader className="m-8" />
-      <main className="m-8">{children}</main>
-      <footer className="mt-auto text-center py-8">Footer</footer>
+      <PageHeader className="my-8" />
+      <main>{children}</main>
+      <footer className="mt-auto py-8 text-center">Footer</footer>
     </>
   );
 }
