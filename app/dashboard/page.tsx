@@ -50,7 +50,7 @@ export default async function DashboardPage({
         </Button>
       </section>
       <Suspense fallback={<TransactionListFallback />}>
-        <TransactionList />
+        <TransactionList range={range} />
       </Suspense>
     </>
   );

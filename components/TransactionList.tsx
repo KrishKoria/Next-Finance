@@ -2,39 +2,16 @@ import { createClient } from "@/utils/supabase/server";
 import Separator from "./seperator";
 import TransactionItem from "./TransactionItem";
 import TransactionSummary from "./TransactionSummary";
+import { groupAndSumTransactionsByDate } from "@/lib/utils";
 
-type Transaction = {
-  id: number;
-  type: "Income" | "Expense" | "Savings" | "Investment";
-  category: string;
-  description: string;
-  amount: number;
-  created_at: string;
-};
-
-const groupAndSumTransactionsByDate = (transactions: Transaction[]) => {
-  const grouped: {
-    [key: string]: { transactions: Transaction[]; amount: number };
-  } = {};
-  for (const transaction of transactions) {
-    const date = transaction.created_at.split("T")[0];
-    if (!grouped[date]) {
-      grouped[date] = { transactions: [], amount: 0 };
-    }
-    grouped[date].transactions.push(transaction);
-    const amount =
-      transaction.type === "Expense" ? -transaction.amount : transaction.amount;
-    grouped[date].amount += amount;
-  }
-  return grouped;
-};
-
-export default async function TransactionList() {
+export default async function TransactionList({ range }: { range: string }) {
   const supabase = createClient();
-  const { data: transactions, error } = await supabase
-    .from("transactions")
-    .select("*")
-    .order("created_at", { ascending: false });
+  let { data: transactions, error } = await supabase.rpc("fetch_transactions", {
+    // limit_arg,
+    // offset_arg,
+    range_arg: range,
+  });
+  if (error) throw new Error("We can't fetch transactions");
   const grouped = groupAndSumTransactionsByDate(transactions!);
   return (
     <div className="space-y-8">
