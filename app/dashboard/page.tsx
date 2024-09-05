@@ -1,3 +1,4 @@
+import Range from "@/components/range";
 import TransactionList from "@/components/TransactionList";
 import TransactionListFallback from "@/components/TransactionListFallback";
 import Trend from "@/components/Trend";
@@ -11,8 +12,11 @@ import { ErrorBoundary } from "react-error-boundary";
 export default async function DashboardPage() {
   return (
     <>
-      <section className="mb-8">
+      <section className="mb-8 flex items-center justify-between">
         <h1 className="text-4xl font-semibold">Summary</h1>
+        <aside>
+          <Range />
+        </aside>
       </section>
       <section className="mb-8 grid grid-cols-2 gap-8 lg:grid-cols-4">
         {types.map((type) => (
