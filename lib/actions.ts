@@ -36,3 +36,22 @@ export async function deleteTransaction(id: number) {
   if (error) throw new Error(`Could not delete the transaction ${id}`);
   revalidatePath("/dashboard");
 }
+
+export async function updateTransaction(id: number, formData: FormData) {
+  const validated = addTransactionSchema.safeParse(formData);
+  if (!validated.success) {
+    throw new Error("Invalid data");
+  }
+
+  const { error } = await createClient()
+    .from("transactions")
+    .update(formData)
+    .eq("id", id);
+
+  if (error) {
+    throw new Error("Failed creating the transaction");
+  }
+
+  revalidatePath("/dashboard");
+  redirect("/dashboard");
+}

@@ -10,12 +10,13 @@ import { addTransactionSchema, AddTransactionSchema } from "@/lib/validations";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import FormError from "./Error";
-import { createTransaction } from "@/lib/actions";
+import { createTransaction, updateTransaction } from "@/lib/actions";
 import { format } from "date-fns";
+type EditTransaction = AddTransactionSchema & { id: number };
 export default function AddTransactionForm({
   initialData,
 }: {
-  initialData?: AddTransactionSchema;
+  initialData?: EditTransaction;
 }) {
   const {
     register,
@@ -39,6 +40,7 @@ export default function AddTransactionForm({
     setLastError(undefined);
     try {
       if (editing) {
+        await updateTransaction(initialData!.id, data);
       } else {
         await createTransaction(data);
       }
