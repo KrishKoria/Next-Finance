@@ -11,8 +11,12 @@ import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import FormError from "./Error";
 import { createTransaction } from "@/lib/actions";
-import { format } from "date-fns";  
-export default function AddTransactionForm() {
+import { format } from "date-fns";
+export default function AddTransactionForm({
+  initialData,
+}: {
+  initialData?: AddTransactionSchema;
+}) {
   const {
     register,
     handleSubmit,
@@ -22,15 +26,22 @@ export default function AddTransactionForm() {
   } = useForm<AddTransactionSchema>({
     resolver: zodResolver(addTransactionSchema),
     mode: "onTouched",
+    defaultValues: initialData ?? {
+      created_at: new Date().toISOString().split("T")[0],
+    },
   });
   const [saving, setSaving] = useState(false);
   const type = watch("type");
   const [lastError, setLastError] = useState<Error | undefined>();
+  const editing = Boolean(initialData);
   const onSubmit = async (data: any) => {
     setSaving(true);
     setLastError(undefined);
     try {
-      await createTransaction(data);
+      if (editing) {
+      } else {
+        await createTransaction(data);
+      }
     } catch (error) {
       if (error instanceof Error) {
         setLastError(error);
@@ -82,6 +93,7 @@ export default function AddTransactionForm() {
           <Input
             {...register("created_at")}
             defaultValue={format(new Date(), "yyyy-MM-dd")}
+            disabled={editing}
           />
           <FormError error={errors.created_at} />
         </div>
