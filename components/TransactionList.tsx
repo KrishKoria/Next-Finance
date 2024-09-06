@@ -16,7 +16,6 @@ export default function TransactionList({
   range: string;
 }) {
   const [transactions, setTransactions] = useState(initialTransactions);
-  const [offset, setOffset] = useState(initialTransactions.length);
   const [buttonHidden, setButtonHidden] = useState(
     initialTransactions.length === 0,
   );
@@ -28,9 +27,12 @@ export default function TransactionList({
     setLoading(true);
     let nextTransactions: any[] = [];
     try {
-      nextTransactions = await fetchTransactions(range, offset, 10);
+      nextTransactions = await fetchTransactions(
+        range,
+        transactions.length,
+        10,
+      );
       setButtonHidden(nextTransactions.length === 0);
-      setOffset((prevValue: number) => prevValue + 10);
       setTransactions((prevTransactions: any[]) => [
         ...prevTransactions,
         ...nextTransactions,
