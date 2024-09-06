@@ -11,7 +11,7 @@ import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import FormError from "./Error";
 import { createTransaction } from "@/lib/actions";
-
+import { format } from "date-fns";  
 export default function AddTransactionForm() {
   const {
     register,
@@ -79,7 +79,10 @@ export default function AddTransactionForm() {
           <Label className="mb-1 block text-gray-700 dark:text-gray-300">
             Date
           </Label>
-          <Input {...register("created_at")} />
+          <Input
+            {...register("created_at")}
+            defaultValue={format(new Date(), "yyyy-MM-dd")}
+          />
           <FormError error={errors.created_at} />
         </div>
 
