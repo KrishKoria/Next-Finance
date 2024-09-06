@@ -16,7 +16,7 @@ export default function TransactionList({
   range: string;
 }) {
   const [transactions, setTransactions] = useState(initialTransactions);
-  const [offset, setOffset] = useState(initialTransactions.length + 1);
+  const [offset, setOffset] = useState(initialTransactions.length);
   const [buttonHidden, setButtonHidden] = useState(
     initialTransactions.length === 0,
   );
@@ -39,6 +39,9 @@ export default function TransactionList({
       setLoading(false);
     }
   };
+  const handleRemoved = (id: number) => () => {
+    setTransactions((prev: any) => [...prev].filter((t) => t.id !== id));
+  };
   return (
     <div className="space-y-8">
       {Object.entries(grouped).map(([date, { transactions, amount }]) => (
@@ -48,7 +51,10 @@ export default function TransactionList({
           <section className="space-y-4">
             {transactions.map((transaction) => (
               <div key={transaction.id}>
-                <TransactionItem {...transaction} />
+                <TransactionItem
+                  {...transaction}
+                  onRemoved={handleRemoved(transaction.id)}
+                />
               </div>
             ))}
           </section>
