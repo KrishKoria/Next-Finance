@@ -55,3 +55,7 @@ export async function updateTransaction(id: number, formData: FormData) {
   revalidatePath("/dashboard");
   redirect("/dashboard");
 }
+
+export async function login(formData: FormData) {
+  console.log(formData);
+}
