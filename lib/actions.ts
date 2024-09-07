@@ -56,14 +56,41 @@ export async function updateTransaction(id: number, formData: FormData) {
   redirect("/dashboard");
 }
 
-export async function login(prevState: any, formData: FormData) {
-  if ("krishkoria2004@gmail.com" === formData.get("email")) {
+export async function login(_prevState: any, formData: FormData) {
+  const supabase = createClient();
+  const email = formData.get("email")?.toString() || "";
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: {
+      shouldCreateUser: true,
+    },
+  });
+  console.log(error);
+  if (error) {
     return {
-      message: "You have a success",
+      error: true,
+      message: "Error authenticating!",
     };
   }
-  return {
-    error: true,
-    message: "Wrong email supplied!",
-  };
+  return { message: `Email sent to ${email}` };
+}
+
+export async function GoogleAuth() {
+  const supabase = createClient();
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: "http://localhost:3000/callback",
+    },
+  });
+
+  if (data.url) {
+    redirect(data.url); // use the redirect API for your server framework
+  }
+}
+
+export async function signOut() {
+  const supabase = createClient();
+  const { error } = await supabase.auth.signOut();
+  redirect("/dashboard");
 }
