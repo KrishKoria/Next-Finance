@@ -56,6 +56,14 @@ export async function updateTransaction(id: number, formData: FormData) {
   redirect("/dashboard");
 }
 
-export async function login(formData: FormData) {
-  console.log(formData);
+export async function login(prevState: any, formData: FormData) {
+  if ("krishkoria2004@gmail.com" === formData.get("email")) {
+    return {
+      message: "You have a success",
+    };
+  }
+  return {
+    error: true,
+    message: "Wrong email supplied!",
+  };
 }
