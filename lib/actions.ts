@@ -3,6 +3,7 @@ import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { addTransactionSchema } from "./validations";
+import { error } from "console";
 
 export async function createTransaction(formData: any) {
   const validated = addTransactionSchema.safeParse(formData);
@@ -94,32 +95,81 @@ export async function signOut() {
   redirect("/dashboard");
 }
 
-export async function uploadAvatar(formData: FormData) {
+export async function uploadAvatar(_prevState: any, formData: FormData) {
   const supabase = createClient();
   const file = formData.get("file");
   if (!file) {
     throw new Error("No file selected");
   }
+
   if (!(file instanceof File)) {
-    throw new Error("Invalid file type");
+    throw new Error("Invalid file type. Please select a valid image.");
   }
+
   const fileExt = file.name.split(".").pop();
-  if (!fileExt) {
-    throw new Error("Invalid file extension");
+
+  if (!fileExt || !["png", "jpg", "jpeg"].includes(fileExt.toLowerCase())) {
+    return {
+      error: true,
+      message: "Invalid file type. Please select a valid image.",
+    };
   }
-  const fileName = `${Math.random()}.${fileExt}`;
-  const { error } = await supabase.storage
+
+  const fileName = `${crypto.randomUUID()}.${fileExt}`;
+
+  // Upload new avatar to Supabase storage
+  const { error: uploadError } = await supabase.storage
     .from("Avatars")
     .upload(fileName, file);
-  if (error) {
-    throw new Error("Error uploading avatar");
+
+  if (uploadError) {
+    return {
+      error: true,
+      message: "Error uploading avatar. Please try again.",
+    };
   }
-  const { error: dataUpdateError } = await supabase.auth.updateUser({
+
+  // Fetch the current user
+  const { data: userData, error: userError } = await supabase.auth.getUser();
+
+  if (userError || !userData?.user) {
+    return {
+      error: true,
+      message: "Failed to fetch user data. Please try again.",
+    };
+  }
+
+  // Check if the user already has an avatar and remove it if exists
+  const previousAvatar = userData.user.user_metadata?.avatar;
+
+  if (previousAvatar) {
+    const { error: removeError } = await supabase.storage
+      .from("Avatars")
+      .remove([previousAvatar]);
+
+    if (removeError) {
+      return {
+        error: true,
+        message: "Error removing previous avatar. Please try again.",
+      };
+    }
+  }
+
+  // Update the user's metadata with the new avatar
+  const { error: updateError } = await supabase.auth.updateUser({
     data: {
       avatar: fileName,
     },
   });
-  if (dataUpdateError) {
-    throw new Error("Error associating the avatar with the user");
+
+  if (updateError) {
+    return {
+      error: true,
+      message: "Error associating the avatar with the user. Please try again.",
+    };
   }
+
+  return {
+    message: "User avatar updated successfully.",
+  };
 }
