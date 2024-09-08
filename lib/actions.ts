@@ -65,7 +65,6 @@ export async function login(_prevState: any, formData: FormData) {
       shouldCreateUser: true,
     },
   });
-  console.log(error);
   if (error) {
     return {
       error: true,
@@ -93,4 +92,34 @@ export async function signOut() {
   const supabase = createClient();
   const { error } = await supabase.auth.signOut();
   redirect("/dashboard");
+}
+
+export async function uploadAvatar(formData: FormData) {
+  const supabase = createClient();
+  const file = formData.get("file");
+  if (!file) {
+    throw new Error("No file selected");
+  }
+  if (!(file instanceof File)) {
+    throw new Error("Invalid file type");
+  }
+  const fileExt = file.name.split(".").pop();
+  if (!fileExt) {
+    throw new Error("Invalid file extension");
+  }
+  const fileName = `${Math.random()}.${fileExt}`;
+  const { error } = await supabase.storage
+    .from("Avatars")
+    .upload(fileName, file);
+  if (error) {
+    throw new Error("Error uploading avatar");
+  }
+  const { error: dataUpdateError } = await supabase.auth.updateUser({
+    data: {
+      avatar: fileName,
+    },
+  });
+  if (dataUpdateError) {
+    throw new Error("Error associating the avatar with the user");
+  }
 }

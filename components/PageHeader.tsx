@@ -4,6 +4,7 @@ import { createClient } from "@/utils/supabase/server";
 import { Button, buttonVariants } from "./ui/button";
 import { CircleUser, KeyRound } from "lucide-react";
 import SignOutButton from "./SignOutButton";
+import Avatar from "./Avatar";
 
 export default async function PageHeader({
   className,
@@ -30,7 +31,7 @@ export default async function PageHeader({
             href="/dashboard/settings"
             className={`${buttonVariants({ variant: "ghost", size: "sm" })} flex items-center space-x-2`}
           >
-            <CircleUser className="h-6 w-6" />
+            <Avatar />
             <span>{user?.email}</span>
           </Link>
         )}

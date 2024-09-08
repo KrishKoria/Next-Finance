@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 
 export default function SideNav() {
   const pathname = usePathname();
-  console.log(pathname);
   return (
     <nav>
       <ul className="space-y-2">

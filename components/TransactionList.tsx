@@ -23,7 +23,6 @@ export default function TransactionList({
   const grouped = groupAndSumTransactionsByDate(transactions);
 
   const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    console.log(transactions);
     setLoading(true);
     let nextTransactions: any[] = [];
     try {
