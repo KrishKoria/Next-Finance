@@ -80,7 +80,7 @@ export async function GoogleAuth() {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: "http://localhost:3000/callback",
+      redirectTo: "http://localhost:3000/auth/callback",
     },
   });
 

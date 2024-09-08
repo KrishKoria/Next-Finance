@@ -1,4 +1,9 @@
+"use client";
 import LoginForm from "@/components/LoginForm";
+import Separator from "@/components/seperator";
+import SubmitButton from "@/components/SubmitButton";
+import { GoogleAuth } from "@/lib/actions";
+import { FaGoogle } from "react-icons/fa6";
 
 export default function LoginPage() {
   return (
@@ -13,6 +18,11 @@ export default function LoginPage() {
       <div>
         <LoginForm />
       </div>
+      <Separator />
+      <SubmitButton onClick={() => GoogleAuth()}>
+        <FaGoogle className="mr-2" />
+        Sign in with Google
+      </SubmitButton>
     </div>
   );
 }
