@@ -3,9 +3,18 @@ import LoginForm from "@/components/LoginForm";
 import Separator from "@/components/seperator";
 import SubmitButton from "@/components/SubmitButton";
 import { GoogleAuth } from "@/lib/actions";
+import { useRouter } from "next/navigation";
 import { FaGoogle } from "react-icons/fa6";
 
-export default function LoginPage() {
+export default function LoginPage({ searchParams }: { searchParams: any }) {
+  const router = useRouter();
+  if (searchParams?.refresh) {
+    router.replace("/auth/login");
+    router.refresh();
+  }
+  const handleGoogleAuth = async () => {
+    await GoogleAuth();
+  };
   return (
     <div className="mx-auto flex w-full flex-col justify-center space-y-6 py-40 sm:w-[350px]">
       <div className="flex flex-col space-y-8 text-center">
@@ -19,7 +28,7 @@ export default function LoginPage() {
         <LoginForm />
       </div>
       <Separator />
-      <SubmitButton onClick={() => GoogleAuth()}>
+      <SubmitButton onClick={handleGoogleAuth}>
         <FaGoogle className="mr-2" />
         Sign in with Google
       </SubmitButton>

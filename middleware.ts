@@ -9,7 +9,7 @@ export async function middleware(request: NextRequest) {
   } = await createClient().auth.getUser();
 
   if (!user && request.nextUrl.pathname.startsWith("/dashboard")) {
-    return Response.redirect(new URL("/auth/login", request.url));
+    return Response.redirect(new URL("/auth/login?refresh=true", request.url));
   }
 
   if (user && request.nextUrl.pathname.startsWith("/login")) {

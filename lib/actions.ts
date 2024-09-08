@@ -3,7 +3,6 @@ import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { addTransactionSchema } from "./validations";
-import { error } from "console";
 
 export async function createTransaction(formData: any) {
   const validated = addTransactionSchema.safeParse(formData);

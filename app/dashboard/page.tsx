@@ -5,7 +5,6 @@ import Trend from "@/components/Trend";
 import TrendFallback from "@/components/TrendFallback";
 import { Button } from "@/components/ui/button";
 import { types } from "@/lib/consts";
-import { createClient } from "@/utils/supabase/server";
 import { PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
