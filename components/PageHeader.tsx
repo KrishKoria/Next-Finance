@@ -26,14 +26,13 @@ export default async function PageHeader({
       <div className="flex items-center">
         <ModeToggle />
         {user && (
-          <Button
-            variant="ghost"
-            size="sm"
-            className="flex items-center space-x-2"
+          <Link
+            href="/dashboard/settings"
+            className={`${buttonVariants({ variant: "ghost", size: "sm" })} flex items-center space-x-2`}
           >
             <CircleUser className="h-6 w-6" />
             <span>{user?.email}</span>
-          </Button>
+          </Link>
         )}
         {user && <SignOutButton />}
         {!user && (
