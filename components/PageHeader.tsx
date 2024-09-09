@@ -32,7 +32,11 @@ export default async function PageHeader({
             className={`${buttonVariants({ variant: "ghost", size: "sm" })} flex items-center space-x-2`}
           >
             <Avatar />
-            <span>{user?.email}</span>
+            <span>
+              {user?.user_metadata?.name ??
+                user.user_metadata?.fullName ??
+                user?.email}
+            </span>
           </Link>
         )}
         {user && <SignOutButton />}

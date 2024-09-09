@@ -174,5 +174,22 @@ export async function uploadAvatar(_prevState: any, formData: FormData) {
 }
 
 export async function updateSettings(_prevState: any, formData: FormData) {
-  // it is empty
+  const supabase = createClient();
+  const { error } = await supabase.auth.updateUser({
+    data: {
+      fullName: formData.get("fullName"),
+      defaultView: formData.get("defaultView"),
+    },
+  });
+
+  if (error) {
+    return {
+      error: true,
+      message: "Failed updating setting",
+    };
+  }
+
+  return {
+    message: "Updated user settings",
+  };
 }

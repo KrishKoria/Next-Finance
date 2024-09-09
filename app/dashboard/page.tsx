@@ -5,6 +5,7 @@ import Trend from "@/components/Trend";
 import TrendFallback from "@/components/TrendFallback";
 import { Button } from "@/components/ui/button";
 import { types } from "@/lib/consts";
+import { createClient } from "@/utils/supabase/server";
 import { PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -14,14 +15,19 @@ export default async function DashboardPage({
 }: {
   searchParams: any;
 }) {
-  const range = searchParams?.range ?? "last30days";
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const settings = user?.user_metadata;
+  const range = searchParams?.range ?? settings?.defaultView ?? "last30days";
   return (
     <>
       <div className="space-y-8">
         <section className="flex items-center justify-between">
           <h1 className="text-4xl font-semibold">Summary</h1>
           <aside>
-            <Range />
+            <Range defaultView={settings?.defaultView} />
           </aside>
         </section>
         <section className="grid grid-cols-2 gap-8 lg:grid-cols-4">
