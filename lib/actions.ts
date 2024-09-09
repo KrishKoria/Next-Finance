@@ -172,3 +172,7 @@ export async function uploadAvatar(_prevState: any, formData: FormData) {
     message: "User avatar updated successfully.",
   };
 }
+
+export async function updateSettings(_prevState: any, formData: FormData) {
+  // it is empty
+}
