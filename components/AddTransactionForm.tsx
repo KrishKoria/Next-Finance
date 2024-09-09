@@ -44,10 +44,8 @@ export default function AddTransactionForm({
       } else {
         await createTransaction(data);
       }
-    } catch (error) {
-      if (error instanceof Error) {
-        setLastError(error);
-      }
+    } catch (error: any) {
+      setLastError(error?.message);
     } finally {
       setSaving(false);
     }
@@ -72,7 +70,7 @@ export default function AddTransactionForm({
               <option key={type}>{type}</option>
             ))}
           </Select>
-          <FormError error={errors.type} />
+          <FormError error={errors.type?.message} />
         </div>
 
         <div>
@@ -85,7 +83,7 @@ export default function AddTransactionForm({
               <option key={category}>{category}</option>
             ))}
           </Select>
-          <FormError error={errors.category} />
+          <FormError error={errors.category?.message} />
         </div>
 
         <div>
@@ -97,7 +95,7 @@ export default function AddTransactionForm({
             defaultValue={format(new Date(), "yyyy-MM-dd")}
             disabled={editing}
           />
-          <FormError error={errors.created_at} />
+          <FormError error={errors.created_at?.message} />
         </div>
 
         <div>
@@ -117,7 +115,7 @@ export default function AddTransactionForm({
             Description
           </Label>
           <Input {...register("description")} />
-          <FormError error={errors.description} />
+          <FormError error={errors.description?.message} />
         </div>
       </div>
 

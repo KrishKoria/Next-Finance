@@ -33,8 +33,8 @@ export default async function PageHeader({
           >
             <Avatar />
             <span>
-              {user?.user_metadata?.name ??
-                user.user_metadata?.fullName ??
+              {user?.user_metadata?.fullName ??
+                user?.user_metadata?.name ??
                 user?.email}
             </span>
           </Link>

@@ -1,13 +1,11 @@
 import { z } from "zod";
-import { categories, types } from "./consts";
-type Category =
-  | "Housing"
-  | "Transport"
-  | "Health"
-  | "Food"
-  | "Education"
-  | "Other"
-  | "None";
+import { categories, Category, dateRangeOptions, types } from "./consts";
+
+export const settingsSchema = z.object({
+  fullName: z.string().min(2).optional(),
+  defaultView: z.enum(dateRangeOptions),
+});
+
 export const addTransactionSchema = z
   .object({
     type: z.enum(types),

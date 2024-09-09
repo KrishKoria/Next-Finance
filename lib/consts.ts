@@ -8,3 +8,19 @@ export const categories = [
   "Other",
   "None",
 ] as const;
+
+export type Category =
+  | "Housing"
+  | "Transport"
+  | "Health"
+  | "Food"
+  | "Education"
+  | "Other"
+  | "None";
+
+export const dateRangeOptions = [
+  "last24hours",
+  "last7days",
+  "last30days",
+  "last12months",
+] as const;

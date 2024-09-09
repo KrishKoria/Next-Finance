@@ -10,10 +10,11 @@ export default function SubmitButton(
   return (
     <Button
       {...props}
-      className={`${props.className} flex items-center justify-center space-x-2`}
+      className={`${props.className} flex items-center justify-center space-x-1`}
+      disabled={pending}
     >
       {pending && <Loader className="h-4 w-4 animate-spin" />}
-      <span>{props.children}</span>
+      {props.children}
     </Button>
   );
 }

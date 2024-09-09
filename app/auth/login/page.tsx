@@ -4,14 +4,17 @@ import Separator from "@/components/seperator";
 import SubmitButton from "@/components/SubmitButton";
 import { GoogleAuth } from "@/lib/actions";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { FaGoogle } from "react-icons/fa6";
 
 export default function LoginPage({ searchParams }: { searchParams: any }) {
   const router = useRouter();
-  if (searchParams?.refresh) {
-    router.replace("/auth/login");
-    router.refresh();
-  }
+  useEffect(() => {
+    if (searchParams?.refresh) {
+      router.replace("/auth/login");
+      router.refresh();
+    }
+  }, [router, searchParams]);
   const handleGoogleAuth = async () => {
     await GoogleAuth();
   };

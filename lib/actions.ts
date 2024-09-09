@@ -2,7 +2,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { addTransactionSchema } from "./validations";
+import { addTransactionSchema, settingsSchema } from "./validations";
 
 export async function createTransaction(formData: any) {
   const validated = addTransactionSchema.safeParse(formData);
@@ -174,11 +174,21 @@ export async function uploadAvatar(_prevState: any, formData: FormData) {
 }
 
 export async function updateSettings(_prevState: any, formData: FormData) {
+  const validated = settingsSchema.safeParse({
+    fullName: formData.get("fullName")?.toString(),
+    defaultView: formData.get("defaultView")?.toString(),
+  });
+  if (!validated.success) {
+    return {
+      error: true,
+      errors: validated.error.flatten().fieldErrors,
+    };
+  }
   const supabase = createClient();
   const { error } = await supabase.auth.updateUser({
     data: {
-      fullName: formData.get("fullName"),
-      defaultView: formData.get("defaultView"),
+      fullName: validated.data.fullName,
+      defaultView: validated.data.defaultView,
     },
   });
 
