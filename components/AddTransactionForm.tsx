@@ -8,11 +8,16 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addTransactionSchema, AddTransactionSchema } from "@/lib/validations";
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { CalendarIcon, Loader2 } from "lucide-react";
 import FormError from "./Error";
 import { createTransaction, updateTransaction } from "@/lib/actions";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { cn } from "@/lib/utils";
+import { Calendar } from "./ui/calendar";
+
 type EditTransaction = AddTransactionSchema & { id: number };
+
 export default function AddTransactionForm({
   initialData,
 }: {
@@ -23,18 +28,26 @@ export default function AddTransactionForm({
     handleSubmit,
     watch,
     setValue,
+    trigger,
     formState: { errors },
+    reset,
   } = useForm<AddTransactionSchema>({
     resolver: zodResolver(addTransactionSchema),
     mode: "onTouched",
     defaultValues: initialData ?? {
-      created_at: new Date().toISOString().split("T")[0],
+      created_at: format(new Date(), "yyyy-MM-dd") || "",
     },
   });
+  console.log(errors);
   const [saving, setSaving] = useState(false);
-  const type = watch("type");
+  const [date, setDate] = useState<Date | undefined>(
+    initialData ? parseISO(initialData.created_at) : undefined,
+  );
   const [lastError, setLastError] = useState<Error | undefined>();
+
+  const type = watch("type");
   const editing = Boolean(initialData);
+
   const onSubmit = async (data: any) => {
     setSaving(true);
     setLastError(undefined);
@@ -43,13 +56,25 @@ export default function AddTransactionForm({
         await updateTransaction(initialData!.id, data);
       } else {
         await createTransaction(data);
+        reset();
       }
     } catch (error: any) {
-      setLastError(error?.message);
+      setLastError(error?.message || "An unexpected error occurred");
+      console.error(error);
     } finally {
       setSaving(false);
     }
   };
+
+  const handleDateSelect = (selectedDate: Date | undefined) => {
+    setDate(selectedDate);
+    const formattedDate = selectedDate
+      ? format(selectedDate, "yyyy-MM-dd")
+      : "";
+    setValue("created_at", formattedDate);
+    trigger("created_at");
+  };
+
   return (
     <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -90,11 +115,31 @@ export default function AddTransactionForm({
           <Label className="mb-1 block text-gray-700 dark:text-gray-300">
             Date
           </Label>
-          <Input
-            {...register("created_at")}
-            defaultValue={format(new Date(), "yyyy-MM-dd")}
-            disabled={editing}
-          />
+          <Popover {...register("created_at")}>
+            <PopoverTrigger asChild>
+              <Button
+                variant={"outline"}
+                className={cn(
+                  "w-[240px] pl-3 text-left font-normal",
+                  !date && "text-muted-foreground",
+                )}
+              >
+                {date ? format(date, "yyyy-MM-dd") : <span>Pick a date</span>}
+                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={handleDateSelect}
+                disabled={(date) =>
+                  date > new Date() || date < new Date("1900-01-01")
+                }
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
           <FormError error={errors.created_at?.message} />
         </div>
 
@@ -107,7 +152,7 @@ export default function AddTransactionForm({
             defaultValue={0}
             {...register("amount", { valueAsNumber: true })}
           />
-          <FormError error={errors.amount} />
+          <FormError error={errors.amount?.message} />
         </div>
 
         <div className="col-span-1 md:col-span-2">
